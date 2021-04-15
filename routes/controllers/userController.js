@@ -12,8 +12,10 @@ module.exports = {
       const hashedPassword = await bcrypt.hash(req.body.password, genSalt);
 
       const createdUser = new User({
+        name: req.body.name,
         email: req.body.email,
         password: hashedPassword,
+        birthday: req.body.birthday,
       });
 
       await createdUser.save();
