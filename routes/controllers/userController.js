@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+require("dotenv").config();
 
 module.exports = {
   createUser: async (req, res) => {
@@ -32,6 +33,57 @@ module.exports = {
       } else {
         res.status(500).json({
           message: "Something went wrong",
+        });
+      }
+    }
+  },
+
+  signIn: async (req, res) => {
+    try {
+      const foundEmail = await User.findOne({ email: req.body.email });
+
+      if (!foundEmail) {
+        throw {
+          message: "No user found, please sign up!",
+          status: 404,
+        };
+      } else {
+        const comparedPassword = await bcrypt.compare(
+          req.body.password,
+          foundEmail.password
+        );
+
+        if (!comparedPassword) {
+          throw {
+            message: "Please check your email and password!",
+            status: 401,
+          };
+        }
+
+        const token = jwt.sign(
+          { email: foundEmail.email, _id: foundEmail._id },
+          process.env.SECRET_KEY,
+          { expiresIn: "24h" }
+        );
+
+        res.json({
+          jwtToken: token,
+        });
+      }
+    } catch (e) {
+      console.log(e);
+
+      if (e.status === 404) {
+        res.status(e.status).json({
+          message: e.message,
+        });
+      } else if (e.status === 401) {
+        res.status(e.status).json({
+          message: e.message,
+        });
+      } else {
+        res.status(500).json({
+          message: e.message,
         });
       }
     }
