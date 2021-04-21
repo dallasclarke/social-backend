@@ -1,13 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const { createUser, signIn } = require("./controllers/userController");
+const { check, validationResult } = require("express-validator");
+
+const { createUser, signIn, verify } = require("./controllers/userController");
 
 /* GET users listing. */
-router.get("/", function (req, res, next) {
-  res.send("respond with a resource");
-});
+
+router.get("/verify", verify)
 
 router.post("/create-user", createUser);
 router.post("/sign-in", signIn);
+
 
 module.exports = router;

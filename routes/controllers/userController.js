@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { mongo } = require("mongoose");
 const User = require("../models/User");
 require("dotenv").config();
 
@@ -42,8 +43,9 @@ module.exports = {
 
   signIn: async (req, res) => {
     try {
+      console.log(req.body);
       const foundEmail = await User.findOne({ email: req.body.email });
-
+      console.log(foundEmail);
       if (!foundEmail) {
         throw {
           message: "No user found, please sign up!",
@@ -70,6 +72,7 @@ module.exports = {
 
         res.json({
           jwtToken: token,
+          email: foundEmail.email,
         });
       }
     } catch (e) {
@@ -86,6 +89,26 @@ module.exports = {
       } else {
         res.status(500).json({
           message: e.message,
+        });
+      }
+    }
+  },
+
+  verify: (request, response) => {
+    try {
+      const payload = jwt.verify(request.query.token, process.env.SECRET_KEY);
+
+      response.json({ email: payload.email });
+    } catch (err) {
+      if (err.name === "JsonWebTokenError") {
+        response.status(400).json({
+          message: err.message,
+        });
+      }
+
+      if (err.name === "TokenExpiredError") {
+        response.status(401).json({
+          message: err.message,
         });
       }
     }
