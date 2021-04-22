@@ -7,7 +7,9 @@ require("dotenv").config();
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
+const postRouter = require("./routes/posts");
 const profileRouter = require("./routes/profile");
+const auth = require("./middleware/auth");
 
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -19,6 +21,7 @@ mongoose
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
   })
   .then(() => console.log("MongoDB Connected"))
   .catch((e) => console.log(e));
@@ -35,6 +38,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/api/users", usersRouter);
+app.use("*", auth);
+app.use("/api/posts", postRouter);
 app.use("/api/profile", profileRouter);
 
 // catch 404 and forward to error handler

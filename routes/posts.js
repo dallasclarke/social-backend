@@ -1,11 +1,17 @@
 const express = require("express");
 const router = express.Router();
-const { check, validationResult } = require("express-validator/check");
+const auth = require("../middleware/auth")
+const { addPost, getPosts, deletePost, getPost, updatePost } = require("./controllers/postController");
 
-router.post(
-  "/",
-  [check("text", "Text is required!").not().isEmpty()],
-  (req, res) => {}
-);
+// /api/posts/
+router.get("/", getPosts);
+router.get("/:id", getPost);
+
+// /api/posts/
+router.post("/", addPost);
+
+router.put("/:id", updatePost);
+
+router.delete("/:id", deletePost)
 
 module.exports = router;
