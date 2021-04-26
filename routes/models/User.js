@@ -17,6 +17,10 @@ const UserSchema = new mongoose.Schema({
   },
   birthday: { type: Date, required: true },
   bio: { type: String },
+  posts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Post"
+  }],
   city: { type: String },
   state: { type: String },
   

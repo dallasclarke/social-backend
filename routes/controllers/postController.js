@@ -4,11 +4,15 @@ const Post = require("../models/Post");
 module.exports = {
   addPost: async (req, res) => {
     try {
-      const id = req.user;
+      const id = req.user;    
+      const name = await User.findOne({_id: id});  
+      console.log(req)
 
       const newPost = new Post({
         text: req.body.text,
         user: id,
+        // name: name.name,
+        
       });
 
       const post = await newPost.save();
@@ -23,7 +27,7 @@ module.exports = {
       const posts = await Post.find({}).exec();
       res.json(posts);
     } catch (err) {
-      console.log(err);
+      console.log("get post", err);
     }
   },
   deletePost: async (req, res) => {

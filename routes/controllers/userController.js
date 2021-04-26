@@ -43,9 +43,9 @@ module.exports = {
 
   signIn: async (req, res) => {
     try {
-      console.log(req.body);
+      console.log(req.body, "Found body");
       const foundEmail = await User.findOne({ email: req.body.email });
-      console.log(foundEmail);
+      console.log(foundEmail, "Found email");
       if (!foundEmail) {
         throw {
           message: "No user found, please sign up!",
@@ -69,14 +69,14 @@ module.exports = {
           process.env.SECRET_KEY,
           { expiresIn: "24h" }
         );
-
+          
         res.json({
           jwtToken: token,
           email: foundEmail.email,
         });
       }
     } catch (e) {
-      console.log(e);
+      console.log("Sign in", e);
 
       if (e.status === 404) {
         res.status(e.status).json({
