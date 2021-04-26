@@ -5,14 +5,15 @@ module.exports = {
   addPost: async (req, res) => {
     try {
       const id = req.user;    
-      const name = await User.findOne({_id: id});  
-      console.log(req)
-
+      const usersName = await User.findById({ _id: req.user}).populate("user").exec();
+      console.log("name =>", usersName.name)
+      
+      const user = await User.findById(req.user).select("-password")
+      console.log(user)
       const newPost = new Post({
         text: req.body.text,
         user: id,
-        // name: name.name,
-        
+        name: usersName.name,    
       });
 
       const post = await newPost.save();
