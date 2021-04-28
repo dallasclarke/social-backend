@@ -17,13 +17,13 @@ const UserSchema = new mongoose.Schema({
       default: Date.now
   },
   birthday: { type: Date, required: true },
-  bio: { type: String },
+  bio: { type: String, default: "Share a bit about you!!" },
   posts: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Post"
   }],
-  city: { type: String },
-  state: { type: String },
+  city: { type: String, default: "City" },
+  state: { type: String, default: "State" },
   
 });
 

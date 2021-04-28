@@ -3,13 +3,16 @@ const User = require("../models/User");
 
 module.exports = {
   getProfile: async (req, res) => {
-    try {
-      // console.log("user =>", req.user);
+    try {      
       const id = req.user;
-      const user = await User.find({});
-      console.log("user =>",user)
+      // const user = await User.find({});
+      // console.log("user =>",user)
 
       const profile = await User.findById(id);
+
+      if (!profile) {
+        return res.status(404).send("No user found!")
+      }
 
       res.send(profile);
     } catch (e) {
@@ -18,6 +21,18 @@ module.exports = {
     }
   },
   updateProfile: async (req, res) => {
+    const id = req.user;
 
+    try {
+      const newProfile = await User.findByIdAndUpdate(id, {
+        $set: { bio: req.body.bio, city: req.body.city, state: req.body.state}
+      }).exec();
+
+      console.log(newProfile)
+
+      return res.json(newProfile)
+    } catch (err) {
+      console.log(err)
+    }
   }
 };
