@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
-
 const { getProfile } = require("./controllers/profileController");
 
-router.get("/user", getProfile);
+router.get("/", getProfile);
+
+router.post("/");
 
 module.exports = router;

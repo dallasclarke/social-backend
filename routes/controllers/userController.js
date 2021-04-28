@@ -69,10 +69,11 @@ module.exports = {
           process.env.SECRET_KEY,
           { expiresIn: "24h" }
         );
-          
+
         res.json({
           jwtToken: token,
           email: foundEmail.email,
+          userId: foundEmail._id,
         });
       }
     } catch (e) {

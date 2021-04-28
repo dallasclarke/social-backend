@@ -4,18 +4,20 @@ const User = require("../models/User");
 module.exports = {
   getProfile: async (req, res) => {
     try {
-      const profile = await (
-        await Profile.findOne({ user: req.user.id })
-      ).populate("User", ["name", "birthday"]);
+      // console.log("user =>", req.user);
+      const id = req.user;
+      const user = await User.find({});
+      console.log("user =>",user)
 
-      if (!profile) {
-        return res.status(400).json({ msg: "There is no profile found!" });
-      }
+      const profile = await User.findById(id);
 
-      res.json(profile);
+      res.send(profile);
     } catch (e) {
       console.log(e.message);
       res.status(500).send("Sever Error");
     }
   },
+  updateProfile: async (req, res) => {
+
+  }
 };

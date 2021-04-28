@@ -5,15 +5,16 @@ module.exports = {
   addPost: async (req, res) => {
     try {
       const id = req.user;    
-      const usersName = await User.findById({ _id: req.user}).populate("user").exec();
-      console.log("name =>", usersName.name)
+      // const usersName = await User.findById({ _id: req.user}).populate("user").exec();
+      // console.log("name =>", usersName.name)
       
-      const user = await User.findById(req.user).select("-password")
-      console.log(user)
+      // const user = await User.findById(req.user).select("-password")
+      // console.log("user =>", user)
+
       const newPost = new Post({
         text: req.body.text,
-        user: id,
-        name: usersName.name,    
+        user: id,  
+               
       });
 
       const post = await newPost.save();
@@ -25,7 +26,8 @@ module.exports = {
   },
   getPosts: async (req, res) => {
     try {
-      const posts = await Post.find({}).exec();
+      const posts = await Post.find({}).sort({date: - 1}).populate('user').exec();
+
       res.json(posts);
     } catch (err) {
       console.log("get post", err);
