@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { getProfile, updateProfile } = require("./controllers/profileController");
+const { getProfile, createProfile, updateProfile } = require("./controllers/profileController");
 
 router.get("/", getProfile);
 
-router.post("/", updateProfile);
+router.post("/", createProfile);
+
+router.put("/", updateProfile);
 
 module.exports = router;

@@ -20,6 +20,22 @@ module.exports = {
       res.status(500).send("Sever Error");
     }
   },
+  createProfile: async (req, res) => {
+
+    try {
+    const profile = new Profile({
+      bio: req.body.bio,
+      city: req.body.city,
+      state: req.body.city,
+      user: req.user
+    });
+    console.log("Profile =>",profile)
+
+  }
+  catch(err) {
+
+  }
+  },
   updateProfile: async (req, res) => {
     const id = req.user;
 
@@ -28,7 +44,7 @@ module.exports = {
         $set: { bio: req.body.bio, city: req.body.city, state: req.body.state}
       }).exec();
 
-      console.log(newProfile)
+      console.log("New Profile =>", newProfile)
 
       return res.json(newProfile)
     } catch (err) {
