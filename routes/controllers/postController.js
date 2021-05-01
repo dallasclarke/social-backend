@@ -1,24 +1,25 @@
 const User = require("../models/User");
 const Post = require("../models/Post");
+const { findById } = require("../models/User");
 
 module.exports = {
   addPost: async (req, res) => {
     try {
-      const id = req.user;    
+      const id = req.user;
       // const usersName = await User.findById({ _id: req.user}).populate("user").exec();
       // console.log("name =>", usersName.name)
-      
+
       // const user = await User.findById(req.user).select("-password")
       // console.log("user =>", user)
 
-      const newPost = new Post({
+      const post = await Post.create({
         text: req.body.text,
-        user: id,  
-               
+        user: id,
       });
 
-      const post = await newPost.save();
-      res.status(201).json(post);
+      const postWithUser = await Post.findById(post.id).populate("user");
+
+      res.status(201).json(postWithUser);
     } catch (err) {
       console.log(err.message);
       res.status(500).send("Server Error");
@@ -26,7 +27,10 @@ module.exports = {
   },
   getPosts: async (req, res) => {
     try {
-      const posts = await Post.find({}).sort({date: - 1}).populate('user').exec();
+      const posts = await Post.find({})
+        .sort({ date: -1 })
+        .populate("user")
+        .exec();
 
       res.json(posts);
     } catch (err) {

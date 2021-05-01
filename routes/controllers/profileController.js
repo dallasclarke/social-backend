@@ -3,7 +3,7 @@ const User = require("../models/User");
 
 module.exports = {
   getProfile: async (req, res) => {
-    try {      
+    try {
       const id = req.user;
       // const user = await User.find({});
       // console.log("user =>",user)
@@ -11,7 +11,7 @@ module.exports = {
       const profile = await User.findById(id);
 
       if (!profile) {
-        return res.status(404).send("No user found!")
+        return res.status(404).send("No user found!");
       }
 
       res.send(profile);
@@ -21,34 +21,37 @@ module.exports = {
     }
   },
   createProfile: async (req, res) => {
-
     try {
-    const profile = new Profile({
-      bio: req.body.bio,
-      city: req.body.city,
-      state: req.body.city,
-      user: req.user
-    });
-    console.log("Profile =>",profile)
-
-  }
-  catch(err) {
-
-  }
+      const profile = new Profile({
+        bio: req.body.bio,
+        city: req.body.city,
+        state: req.body.city,
+        user: req.user,
+      });
+      console.log("Profile =>", profile);
+    } catch (err) {}
   },
   updateProfile: async (req, res) => {
     const id = req.user;
 
     try {
-      const newProfile = await User.findByIdAndUpdate(id, {
-        $set: { bio: req.body.bio, city: req.body.city, state: req.body.state}
-      }).exec();
+      const newProfile = await User.findByIdAndUpdate(
+        id,
+        {
+          $set: {
+            bio: req.body.bio,
+            city: req.body.city,
+            state: req.body.state,
+          },
+        },
+        { new: true }
+      ).exec();
 
-      console.log("New Profile =>", newProfile)
+      console.log("New Profile =>", newProfile);
 
-      return res.json(newProfile)
+      return res.json(newProfile);
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
+  },
 };
