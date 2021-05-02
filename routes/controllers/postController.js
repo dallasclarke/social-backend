@@ -11,9 +11,9 @@ module.exports = {
 
       // const user = await User.findById(req.user).select("-password")
       // console.log("user =>", user)
-
       const post = await Post.create({
         text: req.body.text,
+        image: req.body.image,
         user: id,
       });
 
@@ -57,7 +57,7 @@ module.exports = {
     try {
       const { id } = req.params;
 
-      const post = await Post.findById(id).exec();
+      const post = await Post.findById(id).populate("user").exec();
       return res.json(post);
     } catch (err) {
       console.log(err);
