@@ -33,25 +33,25 @@ module.exports = {
   },
   updateProfile: async (req, res) => {
     const id = req.user;
+    
+     try {
+       const newProfile = await User.findByIdAndUpdate(
+         id,
+         {
+           $set: {
+             bio: req.body.bio,
+             city: req.body.city,
+             state: req.body.state,
+           },
+         },
+         { new: true }
+       ).exec();
 
-    try {
-      const newProfile = await User.findByIdAndUpdate(
-        id,
-        {
-          $set: {
-            bio: req.body.bio,
-            city: req.body.city,
-            state: req.body.state,
-          },
-        },
-        { new: true }
-      ).exec();
+       console.log("New Profile =>", newProfile);
 
-      console.log("New Profile =>", newProfile);
-
-      return res.json(newProfile);
-    } catch (err) {
-      console.log(err);
-    }
+       return res.json(newProfile);
+     } catch (err) {
+       console.log(err);
+     }
   },
 };

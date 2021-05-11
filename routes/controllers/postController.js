@@ -1,6 +1,11 @@
 const User = require("../models/User");
 const Post = require("../models/Post");
 const { findById } = require("../models/User");
+const { v4: uuid } = require("uuid");
+const path = require("path");
+const { rootDir } = require("../../config");
+const fs = require("fs");
+const fsPromises = fs.promises;
 
 module.exports = {
   addPost: async (req, res) => {
@@ -11,11 +16,28 @@ module.exports = {
 
       // const user = await User.findById(req.user).select("-password")
       // console.log("user =>", user)
+      const filename = uuid();
+      const base64 = req.body.image;
+      const ext = req.body.extension;
+
+      const buffer = Buffer.from(base64, "base64");
+      const filePath = path.resolve(
+        rootDir,
+        "public",
+        "content",
+        `${filename}.${ext}`
+      );
+
+      const fullPath = filePath.split("/");
+      const fileName = fullPath[fullPath.length - 1];
+
       const post = await Post.create({
         text: req.body.text,
-        image: req.body.image,
+        image: fileName,
         user: id,
       });
+
+      await fsPromises.writeFile(filePath, buffer);
 
       const postWithUser = await Post.findById(post.id).populate("user");
 

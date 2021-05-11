@@ -13,8 +13,8 @@ const auth = require("./middleware/auth");
 
 const mongoose = require("mongoose");
 const cors = require("cors");
-
 const app = express();
+
 app.use(cors());
 
 mongoose
