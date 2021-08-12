@@ -39,7 +39,7 @@ module.exports = {
 
       await fsPromises.writeFile(filePath, buffer);
 
-      const postWithUser = await Post.findById(post.id).populate("user");
+      const postWithUser = await Post.findById(post.id).populate("user", ["name", "avatar"]);
 
       res.status(201).json(postWithUser);
     } catch (err) {
